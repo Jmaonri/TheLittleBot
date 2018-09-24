@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import discord
 from discord.ext.commands import bot
 from discord.ext import commands
@@ -21,7 +23,7 @@ async def on_ready():
     print("Log:\n")
     #Set the 'playing' status as the set string
     await client.change_presence(game=discord.Game(name='!Commands | !Github',  type = 1, url = 'https://www.twitch.tv/thelittledude_ld'))
- 
+
 #List of Awooo images
 awooList = list(range(1, 18))
 awooList[1] = "http://i.imgur.com/0nk3PVL.gif"
