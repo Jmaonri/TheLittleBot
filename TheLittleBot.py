@@ -20,7 +20,7 @@ async def on_ready():
     print('------')
     print("Log:\n")
     #Set the 'playing' status as the set string
-    await client.change_presence(game=discord.Game(name='Momo is Gay',  type = 1, url = 'https://www.twitch.tv/thelittledude_ld'))
+    await client.change_presence(game=discord.Game(name='!Commands | !Github',  type = 1, url = 'https://www.twitch.tv/thelittledude_ld'))
  
 #List of Awooo images
 awooList = list(range(1, 18))
@@ -44,7 +44,7 @@ awooList[16] = "https://cdn.awwni.me/rhkb.png"
 @client.event
 async def on_message(message):
     if message.content.lower().startswith('!commands'):
-        await client.send_message(message.channel, "```\nHere are all the commands:\n\n!Github - Link to the github of TheLittleBot Bot\n!woo - Awooo?\n!Twitch - Sends link to TheLittleDude's Twitch channel```")
+        await client.send_message(message.channel, "```\nHere are all the commands:\n\n!Github - Link to the github of TheLittleBot\n!Awoo - Awooo?\n!Twitch - Sends link to TheLittleDude's Twitch channel```")
     if message.content.lower().startswith('ryan pls'):
         await client.send_message(message.channel, "Yeah shut the fuck up Ryan")
     if message.content.lower().startswith('!twitch'):
@@ -54,7 +54,7 @@ async def on_message(message):
         Embed.set_image(url = awooList[random.randint(1, 16)])
         await client.send_message(message.channel, embed = Embed)
     if message.content.lower().startswith('!github'):
-        await client.send_message(message.channel, "")
+        await client.send_message(message.channel, "https://github.com/Jmaonri/TheLittleBot")
     if message.content.lower().startswith('gay'):
         await client.send_message(message.channel, "<@!242378170534199306> You're being summoned")
     if message.content.lower().startswith('big gay'):
