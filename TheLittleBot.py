@@ -11,9 +11,11 @@ from twitch import TwitchClient
 import twitchio
 from twitchio import commands as tcommands
 import random
+import urllib.request
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "!")
+announcementChannelId = '470467228618194945'
 
 #Startup Log
 @client.event
@@ -61,6 +63,9 @@ async def on_message(message):
         await client.send_message(message.channel, "<@!242378170534199306> You're being summoned")
     if message.content.lower().startswith('big gay'):
         await client.send_message(message.channel, "<@!242378170534199306> You're being summoned")
+    if message.content.lower().startswith('!announcement'):
+        announcement = message.content.split('!announcement')
+        await client.send_message(discord.Object(id = announcementChannelId), announcement[1])
 
 #Bot token goes here
 client.run(token) #Opens Token.py and draws the token variable "client.run(file name, variable in file)"
