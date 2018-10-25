@@ -11,11 +11,13 @@ from twitch import TwitchClient
 import twitchio
 from twitchio import commands as tcommands
 import random
-import urllib.request
+import requests
+import json
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "!")
 announcementChannelId = '470467228618194945'
+liveStatus = False
 
 #Startup Log
 @client.event
@@ -25,6 +27,7 @@ async def on_ready():
     print("Log:\n")
     #Set the 'playing' status as the set string
     await client.change_presence(game=discord.Game(name='!Commands | !Github',  type = 1, url = 'https://www.twitch.tv/thelittledude_ld'))
+    client.loop.create_task(checkStream())
 
 #List of Awooo images
 awooList = list(range(1, 18))
@@ -45,27 +48,39 @@ awooList[14] = "https://2static1.fjcdn.com/comments/Anonymous+roll+picture+searc
 awooList[15] = "https://ih1.redbubble.net/image.500965719.2653/st%2Csmall%2C215x235-pad%2C210x230%2Cf8f8f8.lite-1u1.jpg"
 awooList[16] = "https://cdn.awwni.me/rhkb.png"
 
+async def checkStream():
+    await client.wait_until_ready()
+    while True:
+        response = requests.get('https://api.twitch.tv/helix/streams?user_login=thelittledude_ld', headers = {'Client-ID': '5xaaxpjr14kps99ib714cznnhkbuqf', 'Accept': 'application/vnd.twitchtv.v5+json'}).json()
+        streamStatus = response['data'][0]['type']
+        if streamStatus == 'live':
+            if liveStatus == False:
+                await client.send_message(discord.Object(id = announcementChannelId), "@everyone We're live \nhttps://twitch.tv/thelittledude_ld")
+            liveStatus = True
+            await asyncio.sleep(500) #wait 500 seconds
+        else:
+            liveStatus = False
+            await asyncio.sleep(60)
+
 @client.event
 async def on_message(message):
-    if message.content.lower().startswith('!commands'):
+    if '!commands' in message.content.lower():
         await client.send_message(message.channel, "```\nHere are all the commands:\n\n!Github - Link to the github of TheLittleBot\n!Awoo - Awooo?\n!Twitch - Sends link to TheLittleDude's Twitch channel```")
-    if message.content.lower().startswith('ryan pls'):
+    elif 'ryan pls' in message.content.lower():
         await client.send_message(message.channel, "Yeah shut the fuck up Ryan")
-    if message.content.lower().startswith('!twitch'):
+    elif '!twitch' in message.content.lower():
         await client.send_message(message.channel, "Here is TheLittleDude's Twitch:\nhttps://twitch.tv/thelittledude_ld")
-    if message.content.lower().startswith('!awoo'):
+    elif '!awoo' in message.content.lower():
         Embed = discord.Embed(title = "**~Awooo**")
         Embed.set_image(url = awooList[random.randint(1, 16)])
         await client.send_message(message.channel, embed = Embed)
-    if message.content.lower().startswith('!github'):
+    elif '!github' in message.content.lower():
         await client.send_message(message.channel, "https://github.com/Jmaonri/TheLittleBot")
-    if message.content.lower().startswith('gay'):
-        await client.send_message(message.channel, "<@!242378170534199306> You're being summoned")
-    if message.content.lower().startswith('big gay'):
-        await client.send_message(message.channel, "<@!242378170534199306> You're being summoned")
-    if message.content.lower().startswith('!announcement'):
+    elif message.content.lower().startswith('!announcement'):
         announcement = message.content.split('!announcement')
         await client.send_message(discord.Object(id = announcementChannelId), announcement[1])
 
 #Bot token goes here
 client.run(token) #Opens Token.py and draws the token variable "client.run(file name, variable in file)"
+
+
