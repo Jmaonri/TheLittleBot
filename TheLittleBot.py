@@ -55,10 +55,8 @@ async def checkStream():
         try:
             response = requests.get('https://api.twitch.tv/helix/streams?user_login=thelittledude_ld', headers = {'Client-ID': '5xaaxpjr14kps99ib714cznnhkbuqf', 'Accept': 'application/vnd.twitchtv.v5+json'}).json()
             streamStatus = response['data'][0]['type']
-            print(streamStatus)
             if streamStatus == 'live':
                 if liveStatus == False:
-                    print("yuh")
                     await client.send_message(discord.Object(id = announcementChannelId), "@everyone We're live \nhttps://twitch.tv/thelittledude_ld")
                     liveStatus = True
                     await asyncio.sleep(500) #wait 500 seconds
