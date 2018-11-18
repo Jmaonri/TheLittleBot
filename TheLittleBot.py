@@ -17,7 +17,7 @@ import json
 Client = discord.Client()
 client = commands.Bot(command_prefix = "!")
 announcementChannelId = '470467228618194945'
-liveStatus = False
+#liveStatus = False
 
 #Startup Log
 @client.event
@@ -50,15 +50,25 @@ awooList[16] = "https://cdn.awwni.me/rhkb.png"
 
 async def checkStream():
     await client.wait_until_ready()
+    liveStatus = False
     while True:
-        response = requests.get('https://api.twitch.tv/helix/streams?user_login=thelittledude_ld', headers = {'Client-ID': '5xaaxpjr14kps99ib714cznnhkbuqf', 'Accept': 'application/vnd.twitchtv.v5+json'}).json()
-        streamStatus = response['data'][0]['type']
-        if streamStatus == 'live':
-            if liveStatus == False:
-                await client.send_message(discord.Object(id = announcementChannelId), "@everyone We're live \nhttps://twitch.tv/thelittledude_ld")
-            liveStatus = True
-            await asyncio.sleep(500) #wait 500 seconds
-        else:
+        try:
+            response = requests.get('https://api.twitch.tv/helix/streams?user_login=thelittledude_ld', headers = {'Client-ID': '5xaaxpjr14kps99ib714cznnhkbuqf', 'Accept': 'application/vnd.twitchtv.v5+json'}).json()
+            streamStatus = response['data'][0]['type']
+            print(streamStatus)
+            if streamStatus == 'live':
+                if liveStatus == False:
+                    print("yuh")
+                    await client.send_message(discord.Object(id = announcementChannelId), "@everyone We're live \nhttps://twitch.tv/thelittledude_ld")
+                    liveStatus = True
+                    await asyncio.sleep(500) #wait 500 seconds
+                else:
+                    await asyncio.sleep(60)
+            else:
+                liveStatus = False
+                await asyncio.sleep(60)
+        except:
+            print("Stream Offline")
             liveStatus = False
             await asyncio.sleep(60)
 
